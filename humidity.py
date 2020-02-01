@@ -14,7 +14,7 @@ while True:
 
     if humidity is not None and temperature is not None:
         temp_f = to_fahrenheit(temperature)
-        print("Room: {} Temp={0:0.1f}*F  Humidity={1:0.1f}%"
+        print("Room: {0:%s} Temp={1:0.1f}*F  Humidity={2:0.1f}%"
             .format(ROOM, temp_f, humidity))
     else:
         print("Failed to retrieve data from humidity sensor")
