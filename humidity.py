@@ -40,8 +40,7 @@ while True:
 
     if humidity is not None and temperature is not None:
         temp_f = to_fahrenheit(temperature)
-        temp_str = "Room: {0} Temp={1:0.1f}*F  Humidity={2:0.1f}%"
-            .format(ROOM, temp_f, humidity)
+        temp_str = "Room: {0} Temp={1:0.1f}*F  Humidity={2:0.1f}%".format(ROOM, temp_f, humidity)
         print(temp_str)
         publish_message(kafka_producer, 'office-temp', 'raw', temp_str)
     else:
