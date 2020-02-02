@@ -4,6 +4,7 @@ import Adafruit_DHT
 
 from json import dumps
 from kafka import KafkaProducer
+from kafka import KafkaError
 
 DHT_SENSOR = Adafruit_DHT.DHT22
 DHT_PIN = 4
@@ -13,7 +14,6 @@ KAFKA = '10.0.0.111:9092'
 def publish_message(producer_instance, topic_name, data):
     try:
         producer_instance.send(topic_name, value=data)
-        producer_instance.flush()
         print("Message published successfully")
     except Exception as ex:
         print("Failed to publish message")
@@ -34,6 +34,13 @@ def to_fahrenheit(temp):
     return (temp * 9/5) + 32
 
 kafka_producer = connect_kafka_producer()
+future = kafka_producer.send('test', b'raw_bytes')
+try:
+    record_metadata = future.get(timeout=10)
+except KafkaError:
+    log.exception()
+    pass
+kafka_producer.flush()
 
 while True:
     humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
