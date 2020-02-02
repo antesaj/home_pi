@@ -32,15 +32,7 @@ def connect_kafka_producer():
 
 def to_fahrenheit(temp):
     return (temp * 9/5) + 32
-
-kafka_producer = connect_kafka_producer()
-future = kafka_producer.send('test', b'raw_bytes')
-try:
-    record_metadata = future.get(timeout=10)
-except KafkaError:
-    log.exception()
-    pass
-kafka_producer.flush()
+    
 
 while True:
     humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
