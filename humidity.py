@@ -4,7 +4,7 @@ import Adafruit_DHT
 
 from json import dumps
 from kafka import KafkaProducer
-from kafka import KafkaError
+from kafka.errors import KafkaError
 
 DHT_SENSOR = Adafruit_DHT.DHT22
 DHT_PIN = 4
