@@ -2,6 +2,7 @@ import time
 import os
 import Adafruit_DHT
 
+from json import dumps
 from kafka import KafkaProducer
 
 DHT_SENSOR = Adafruit_DHT.DHT22
