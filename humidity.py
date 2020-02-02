@@ -11,9 +11,7 @@ KAFKA = '10.0.0.111:9092'
 
 def publish_message(producer_instance, topic_name, data):
     try:
-        key_bytes = bytes(key, encoding='utf-8')
-        value_bytes = bytes(value, encoding='utf-8')
-        producer_instance.send(topic_name, data=value_bytes)
+        producer_instance.send(topic_name, data=data)
         producer_instance.flush()
         print("Message published successfully")
     except Exception as ex:
