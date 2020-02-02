@@ -11,7 +11,7 @@ KAFKA = '10.0.0.111:9092'
 
 def publish_message(producer_instance, topic_name, data):
     try:
-        producer_instance.send(topic_name, data=data)
+        producer_instance.send(topic_name, value=data)
         producer_instance.flush()
         print("Message published successfully")
     except Exception as ex:
