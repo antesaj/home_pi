@@ -49,7 +49,7 @@ while True:
         temp_f = to_fahrenheit(temperature)
         temp_str = "Room: {0} Temp={1:0.1f}*F  Humidity={2:0.1f}%".format(ROOM, temp_f, humidity)
         print(temp_str)
-        producer.send(bytes(temp_str, encoding='utf-8')).add_callback(on_send_success).add_errback(on_send_error)
+        producer.send('office-temp', bytes(temp_str, encoding='utf-8')).add_callback(on_send_success).add_errback(on_send_error)
         producer.flush()
         # data = {'temp': temp_f, 'humidity': humidity}
         # publish_message(kafka_producer, 'office-temp', data)
