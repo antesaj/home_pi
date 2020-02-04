@@ -11,29 +11,37 @@ DHT_PIN = 4
 ROOM = os.getenv("ROOM")
 KAFKA = '10.0.0.111:9092'
 
-def publish_message(producer_instance, topic_name, data):
-    try:
-        producer_instance.send(topic_name, value=data)
-        print("Message published successfully")
-    except Exception as ex:
-        print("Failed to publish message")
-        print(str(ex))
+# def publish_message(producer_instance, topic_name, data):
+#     try:
+#         producer_instance.send(topic_name, value=data)
+#         print("Message published successfully")
+#     except Exception as ex:
+#         print("Failed to publish message")
+#         print(str(ex))
+#
+# def connect_kafka_producer():
+#     _producer = None
+#     try:
+#         _producer = KafkaProducer(bootstrap_servers=[KAFKA],
+#                                   value_serializer=lambda x: dumps(x).encode('utf-8'))
+#     except Exception as ex:
+#         print("Failed to connect to Kafka")
+#         print(str(ex))
+#     finally:
+#         return _producer
 
-def connect_kafka_producer():
-    _producer = None
-    try:
-        _producer = KafkaProducer(bootstrap_servers=[KAFKA],
-                                  value_serializer=lambda x: dumps(x).encode('utf-8'))
-    except Exception as ex:
-        print("Failed to connect to Kafka")
-        print(str(ex))
-    finally:
-        return _producer
+def on_send_error(excp):
+    log.error("Error", exc_info=excp)
+
+def on_send_success(record_metadata):
+    print(record_metadata.topic)
+    print(record_metadata.partition)
+    print(record_metadata.offset)
 
 def to_fahrenheit(temp):
     return (temp * 9/5) + 32
 
-
+producer = KafkaProducer(bootstrap_servers=[KAFKA])
 while True:
     humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
 
@@ -41,6 +49,10 @@ while True:
         temp_f = to_fahrenheit(temperature)
         temp_str = "Room: {0} Temp={1:0.1f}*F  Humidity={2:0.1f}%".format(ROOM, temp_f, humidity)
         print(temp_str)
+        producer.send('office-temp', b'{temp_str}'.format(temp_str)
+            .add_callback(on_send_success)
+            .add_errback(on_send_error))
+        producer.flush()
         # data = {'temp': temp_f, 'humidity': humidity}
         # publish_message(kafka_producer, 'office-temp', data)
     else:
