@@ -32,7 +32,7 @@ def connect_kafka_producer():
 
 def to_fahrenheit(temp):
     return (temp * 9/5) + 32
-    
+
 
 while True:
     humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
@@ -41,8 +41,8 @@ while True:
         temp_f = to_fahrenheit(temperature)
         temp_str = "Room: {0} Temp={1:0.1f}*F  Humidity={2:0.1f}%".format(ROOM, temp_f, humidity)
         print(temp_str)
-        data = {'temp': temp_f, 'humidity': humidity}
-        publish_message(kafka_producer, 'office-temp', data)
+        # data = {'temp': temp_f, 'humidity': humidity}
+        # publish_message(kafka_producer, 'office-temp', data)
     else:
         print("Failed to retrieve data from humidity sensor")
 
